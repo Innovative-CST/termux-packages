@@ -30,7 +30,7 @@ else
 fi
 
 # Termux packages configuration.
-TERMUX_APP_PACKAGE="com.termux"
+TERMUX_APP_PACKAGE="com.icst.android.appstudio"
 TERMUX_BASE_DIR="/data/data/${TERMUX_APP_PACKAGE}/files"
 TERMUX_CACHE_DIR="/data/data/${TERMUX_APP_PACKAGE}/cache"
 TERMUX_ANDROID_HOME="${TERMUX_BASE_DIR}/home"
@@ -43,13 +43,13 @@ TERMUX_CONFIG_PREFIX_DIR_PATH="${TERMUX_ETC_PREFIX_DIR_PATH}/termux"
 TERMUX_BOOTSTRAP_CONFIG_DIR_PATH="${TERMUX_CONFIG_PREFIX_DIR_PATH}/bootstrap"
 
 # Path to CGCT tools
-CGCT_DEFAULT_PREFIX="/data/data/com.termux/files/usr/glibc"
-export CGCT_DIR="/data/data/com.termux/cgct"
+CGCT_DEFAULT_PREFIX="/data/data/com.icst.android.appstudio/files/usr/glibc"
+export CGCT_DIR="/data/data/com.icst.android.appstudio/cgct"
 
 # Package name for the packages hosted on the repo.
 # This must only equal TERMUX_APP_PACKAGE if using custom repo that
 # has packages that were built with same package name.
-TERMUX_REPO_PACKAGE="com.termux"
+TERMUX_REPO_PACKAGE="com.icst.android.appstudio"
 
 # Termux repo urls.
 TERMUX_REPO_URL=()
