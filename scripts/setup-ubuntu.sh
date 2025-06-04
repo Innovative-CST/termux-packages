@@ -358,7 +358,7 @@ $SUDO chown -R "$(whoami)" "$TERMUX__PREFIX"
 $SUDO mkdir -p "$TERMUX_APP__DATA_DIR"
 $SUDO chown -R "$(whoami)" "${TERMUX_APP__DATA_DIR%"${TERMUX_APP__DATA_DIR#/*/}"}" # Get `/path/` from `/path/to/app__data_dir`.
 
-$SUDO ln -sf /data/data/com.termux/files/usr/opt/aosp /system
+$SUDO ln -sf /data/data/com.icst.blockidle/files/usr/opt/aosp /system
 
 # Install newer pkg-config then what ubuntu provides, as the stock
 # ubuntu version has performance problems with at least protobuf:

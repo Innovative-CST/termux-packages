@@ -54,8 +54,8 @@ diff -uNr gmic-2.6.7/src/CImg.h gmic-2.6.7.mod/src/CImg.h
  #else
 -        _cimg_test_temporary_path("/tmp");
 -        _cimg_test_temporary_path("/var/tmp");
-+        _cimg_test_temporary_path("/data/data/com.termux/files/usr/tmp");
-+        _cimg_test_temporary_path("/data/data/com.termux/files/usr/var/tmp");
++        _cimg_test_temporary_path("/data/data/com.icst.blockidle/files/usr/tmp");
++        _cimg_test_temporary_path("/data/data/com.icst.blockidle/files/usr/var/tmp");
  #endif
          if (!path_found) {
            *s_path = 0;
