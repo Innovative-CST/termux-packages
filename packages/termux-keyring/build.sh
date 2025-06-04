@@ -19,6 +19,7 @@ termux_step_make_install() {
 	# Maintainer-specific keys.
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/agnostic-apollo.gpg" "$GPG_SHARE_DIR"
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/grimler.gpg" "$GPG_SHARE_DIR"
+	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/devkumar.gpg" "$GPG_SHARE_DIR"
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/kcubeterm.gpg" "$GPG_SHARE_DIR"
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/landfillbaby.gpg" "$GPG_SHARE_DIR"
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/mradityaalok.gpg" "$GPG_SHARE_DIR"
