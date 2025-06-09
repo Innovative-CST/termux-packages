@@ -476,6 +476,9 @@ for package_arch in "${TERMUX_ARCHITECTURES[@]}"; do
 	pull_package termux-tools
 	pull_package util-linux
 	pull_package xz-utils
+	
+	# IDE tools
+	pull_package blockidle-tools
 
 	# Additional.
 	pull_package ed
