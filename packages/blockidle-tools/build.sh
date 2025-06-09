@@ -12,9 +12,9 @@ TERMUX_PKG_CONFFILES="etc/blockidle/idesetup.sh"
 TERMUX_PKG_DEPENDS="bash, unzip, libcurl, zip"
 
 termux_step_make_install() {
-    # Create the destination directory
-    install -Dm700 "$TERMUX_PKG_BUILDER_DIR/idesetup.sh" "$TERMUX_PREFIX/etc/blockidle/idesetup.sh"
+	# Create the destination directory
+	install -Dm700 "$TERMUX_PKG_BUILDER_DIR/idesetup.sh" "$TERMUX_PREFIX/etc/blockidle/idesetup.sh"
 
-    # Make it executable globally via symlink
-    ln -sf "$PREFIX/etc/blockidle/idesetup.sh" "$PREFIX/bin/idesetup.sh"
+	# Make it executable globally via symlink
+	ln -sf "$PREFIX/etc/blockidle/idesetup.sh" "$PREFIX/bin/idesetup.sh"
 }
