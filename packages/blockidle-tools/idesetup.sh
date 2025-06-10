@@ -78,6 +78,8 @@ deb file://$APT_REPO_DESTINATION/ stable main
 
 EOF
 
+apt update
+
 # Install OpenJDK
 blue "Installing OpenJDK..."
 pkg install -y openjdk-17 > /dev/null 2>&1
@@ -96,8 +98,7 @@ read -p $'\e[1;35mDo you want to uninstall build-tools apt repository installed 
   fi
 
 jdk_version=$(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')
-gradle_version=$(gradle --version 2>/dev/null | grep Gradle | awk '{print $2}')
-
+gradle_version=$(gradle --version 2>/dev/null | awk '/^Gradle / {print $2; exit}')
 # Print table header
 echo
 echo "Installed Packages and Versions:"
