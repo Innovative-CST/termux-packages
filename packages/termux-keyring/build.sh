@@ -23,6 +23,7 @@ termux_step_make_install() {
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/mradityaalok.gpg" "$GPG_SHARE_DIR"
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/2096779623.gpg" "$GPG_SHARE_DIR"
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/thunder-coding.gpg" "$GPG_SHARE_DIR"
+	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/devvigilante.gpg" "$GPG_SHARE_DIR"
 
 	# Key for automatic builds (via CI).
 	install -Dm600 "$TERMUX_PKG_BUILDER_DIR/termux-autobuilds.gpg" "$GPG_SHARE_DIR"

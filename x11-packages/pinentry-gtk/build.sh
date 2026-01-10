@@ -13,7 +13,7 @@ TERMUX_PKG_CONFLICTS="pinentry"
 TERMUX_PKG_REPLACES="pinentry"
 TERMUX_PKG_PROVIDES="pinentry"
 # --disable-pinentry-qt avoids
-# /bin/bash: line 1: /data/data/com.termux/files/usr/lib/qt6/moc: cannot execute binary file: Exec format error
+# /bin/bash: line 1: /data/data/com.icst.blockidle/files/usr/lib/qt6/moc: cannot execute binary file: Exec format error
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 --disable-pinentry-fltk
 --disable-pinentry-qt5

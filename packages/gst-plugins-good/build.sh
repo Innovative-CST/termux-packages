@@ -8,7 +8,7 @@ TERMUX_PKG_SHA256=7beacb5daba3c6751ebc1c85017d9b1d6de64e24798125932c73c8b1dbeb3b
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_DEPENDS="glib, gst-plugins-base, gstreamer, libandroid-shmem, libbz2, libcaca, libflac, libjpeg-turbo, libmp3lame, libnettle, libpng, libvpx, libx11, libxext, libxfixes, libxml2, libmpg123, pulseaudio, zlib"
 # -Dqt5=disabled and -Dqt6=disabled avoid
-# /bin/bash: line 1: /data/data/com.termux/files/usr/lib/qt6/moc: cannot execute binary file: Exec format error
+# /bin/bash: line 1: /data/data/com.icst.blockidle/files/usr/lib/qt6/moc: cannot execute binary file: Exec format error
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -Dcairo=disabled
 -Dexamples=disabled
