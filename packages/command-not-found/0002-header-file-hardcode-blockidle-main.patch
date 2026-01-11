@@ -1,0 +1,54 @@
+diff --git a/command-not-found.cpp b/command-not-found.cpp
+--- a/command-not-found.cpp
++++ b/command-not-found.cpp
+@@ -27,18 +27,18 @@
+ 
+ const std::list<std::string_view> main_commands = {
+ #ifdef __aarch64__
+-#include "commands-aarch64-termux-main.h"
++#include "commands-aarch64-blockidle-main.h"
+ #elif defined __arm__
+-#include "commands-arm-termux-main.h"
++#include "commands-arm-blockidle-main.h"
+ #elif defined __i686__
+-#include "commands-i686-termux-main.h"
++#include "commands-i686-blockidle-main.h"
+ #elif defined __x86_64__
+-#include "commands-x86_64-termux-main.h"
++#include "commands-x86_64-blockidle-main.h"
+ #else
+ #error Failed to detect arch
+ #endif
+ };
+-
++/*
+ const std::list<std::string_view> root_commands = {
+ #ifdef __aarch64__
+ #include "commands-aarch64-termux-root.h"
+@@ -66,7 +66,7 @@ const std::list<std::string_view> x11_commands = {
+ #error Failed to detect arch
+ #endif
+ };
+-
++*/
+ struct info {
+   std::string binary, repository;
+ };
+@@ -181,7 +181,7 @@ int main(int argc, const char *argv[]) {
+   if (res != 0) {
+     return res;
+   }
+-
++/*
+   res = termux_look_for_packages(command, root_commands, &best_distance,
+                                  package_map, "root");
+   if (res != 0) {
+@@ -193,7 +193,7 @@ int main(int argc, const char *argv[]) {
+   if (res != 0) {
+     return res;
+   }
+-
++*/
+   if (best_distance == -1 || best_distance > 3) {
+     std::cerr << command << ": command not found" << std::endl;
+   } else if (best_distance == 0) {
