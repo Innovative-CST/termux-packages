@@ -20,12 +20,11 @@ BOOTSTRAP_ANDROID10_COMPATIBLE=false
 TERMUX_ARCHITECTURES=("aarch64" "arm" "i686" "x86_64")
 
 # The supported termux package managers.
-TERMUX_PACKAGE_MANAGERS=("apt" "pacman")
+TERMUX_PACKAGE_MANAGERS=("apt")
 
 # The repository base urls mapping for package managers.
 declare -A REPO_BASE_URLS=(
-	["apt"]="https://packages-cf.termux.dev/apt/termux-main"
-	["pacman"]="https://service.termux-pacman.dev/main"
+	["apt"]="https://innovative-cst.github.io/blockidle-default-mirror"
 )
 
 # The package manager that will be installed in bootstrap.
@@ -121,6 +120,7 @@ pull_package() {
 	if [ ${TERMUX_PACKAGE_MANAGER} = "apt" ]; then
 		local package_url
 		package_url="$REPO_BASE_URL/$(echo "${PACKAGE_METADATA[${package_name}]}" | grep -i "^Filename:" | awk '{ print $2 }')"
+		echo "Repo url is : $package_url"
 		if [ "${package_url}" = "$REPO_BASE_URL" ] || [ "${package_url}" = "${REPO_BASE_URL}/" ]; then
 			echo "[!] Failed to determine URL for package '$package_name'."
 			exit 1
