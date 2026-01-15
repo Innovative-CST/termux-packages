@@ -1,9 +1,18 @@
 {
   "pkg_format": "debian",
+
   "packages": {
     "name": "blockidle-main",
+    "directories": ["packages"],
     "distribution": "stable",
     "component": "main",
     "url": "https://innovative-cst.github.io/blockidle-default-mirror"
+  },
+  "build_tools": {
+    "name": "blockidle-build-tools",
+    "directories": ["packages"],
+    "distribution": "stable",
+    "component": "main",
+    "url": "https://innovative-cst.github.io/blockidle-build-tools-mirror"
   }
 }

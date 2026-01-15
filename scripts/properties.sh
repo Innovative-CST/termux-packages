@@ -2206,7 +2206,18 @@ if [[ ! -f "$TERMUX_PKGS__BUILD__REPO_ROOT_DIR/repo.json" ]]; then
     fi
 else
     export TERMUX_PACKAGES_DIRECTORIES
-    TERMUX_PACKAGES_DIRECTORIES=$(jq --raw-output 'del(.pkg_format) | keys | .[]' "$TERMUX_PKGS__BUILD__REPO_ROOT_DIR/repo.json")
+    unset TERMUX_PACKAGES_DIRECTORIES
+    TERMUX_PACKAGES_DIRECTORIES=()
+    declare -A __seen_dirs=()
+    
+    while IFS= read -r dir; do
+        # safe check for unbound variables
+        [[ -n "$dir" && -z "${__seen_dirs[$dir]:-}" ]] || continue
+        TERMUX_PACKAGES_DIRECTORIES+=("$dir")
+        __seen_dirs[$dir]=1
+    done < <(
+        jq -r 'del(.pkg_format) | .[] | .directories[]' "$TERMUX_PKGS__BUILD__REPO_ROOT_DIR/repo.json"
+    )
 
     for url in $(jq -r 'del(.pkg_format) | .[] | .url' "$TERMUX_PKGS__BUILD__REPO_ROOT_DIR/repo.json"); do
         TERMUX_REPO_URL+=("$url")

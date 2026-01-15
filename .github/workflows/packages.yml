@@ -23,7 +23,10 @@ on:
       repository:
         description: 'Target repository to push deb files'
         required: true
-        default: 'Innovative-CST/blockidle-default-deb'
+        type: choice
+        options:
+          - Innovative-CST/blockidle-default-deb
+          - Innovative-CST/blockidle-build-tools-deb
 
 permissions: {} # none
 
@@ -273,9 +276,9 @@ jobs:
             # support permanently unsetting variables at time of writing.
             # https://github.com/actions/runner/issues/1126
             unset NDK ANDROID_HOME
-            ./build-package.sh -C -a "${{ matrix.target_arch }}" "${packages[@]}"
+            ./build-package.sh -I -C -a "${{ matrix.target_arch }}" "${packages[@]}"
           else
-            ./scripts/run-docker.sh ./build-package.sh -C -a "${{ matrix.target_arch }}" "${packages[@]}"
+            ./scripts/run-docker.sh ./build-package.sh -I -C -a "${{ matrix.target_arch }}" "${packages[@]}"
           fi
         fi
 
@@ -375,6 +378,7 @@ jobs:
         cd debfiles
         git config --global user.name "DevVigilante"
         git config --global user.email "96680248+DevVigilante@users.noreply.github.com"
+        git lfs untrack "*.deb"
         git add .
         git commit -m "feat: upload deb files for ${{ github.event.inputs.packages}}"
         git push origin main -f
