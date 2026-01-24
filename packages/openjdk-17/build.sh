@@ -63,7 +63,7 @@ termux_step_configure() {
 		--with-libjpeg=system \
 		--with-libpng=system \
 		--with-zlib=system \
-		--with-vendor-name="Termux" \
+		--with-vendor-name="BlockIDLE" \
 		AR="$AR" \
 		NM="$NM" \
 		OBJCOPY="$OBJCOPY" \
