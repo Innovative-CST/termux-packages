@@ -3,13 +3,13 @@ TERMUX_PKG_DESCRIPTION="Ambitious Vim-fork focused on extensibility and agility 
 TERMUX_PKG_LICENSE="Apache-2.0, VIM License"
 TERMUX_PKG_LICENSE_FILE="LICENSE.txt"
 TERMUX_PKG_MAINTAINER="Joshua Kahn @TomJo2000"
-TERMUX_PKG_VERSION="0.12.0~dev-2009+gcb77bd1b86"
+TERMUX_PKG_VERSION="0.12.0~dev-2062+g30259d6af7"
 TERMUX_PKG_SRCURL=https://github.com/neovim/neovim/archive/${TERMUX_PKG_VERSION##*+g}.tar.gz
-TERMUX_PKG_SHA256=25099d22c4cd5b7e4ae2f19f2bda2c5fdc56182e9ed6abb490b02e5248f02668
+TERMUX_PKG_SHA256=82c7e83ff083894d093155b05a2921e78f0daab6ae32b5680fadc2efb74177a5
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_UPDATE_VERSION_REGEXP="v.*-dev.*\+g[0-9a-f]*"
 TERMUX_PKG_UPDATE_VERSION_SED_REGEXP="s/-/~/"
-TERMUX_PKG_DEPENDS="libiconv, libuv, luv, libmsgpack, libvterm (>= 1:0.3-0), libluajit, libunibilium, libandroid-support, lua51-lpeg, tree-sitter, tree-sitter-parsers, utf8proc"
+TERMUX_PKG_DEPENDS="libiconv, libuv, luv, libmsgpack, libvterm (>= 1:0.3-0), luajit, libunibilium, libandroid-support, lua51-lpeg, tree-sitter, tree-sitter-parsers, utf8proc"
 TERMUX_PKG_BREAKS="neovim"
 TERMUX_PKG_CONFLICTS="neovim"
 TERMUX_PKG_HOSTBUILD=true

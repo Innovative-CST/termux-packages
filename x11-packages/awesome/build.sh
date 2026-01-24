@@ -3,15 +3,20 @@ TERMUX_PKG_DESCRIPTION="A highly configurable, next generation framework window 
 TERMUX_PKG_LICENSE="GPL-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
 # Latest release version 4.3 does not support Lua 5.4.
-_COMMIT=f009815cb75139acf4d8ba3c1090bf2844d13f4c
-TERMUX_PKG_VERSION=2025.05.17
+_COMMIT=cab3e81dc6071e3c1c4bd15cf8fab91236c7f2bd
+TERMUX_PKG_VERSION="2026.01.04"
 TERMUX_PKG_SRCURL=git+https://github.com/awesomeWM/awesome
-TERMUX_PKG_SHA256=d56f6ab4e9d820504509599279904b17e4bd2b4a37edab1adb43b3ecabd70893
+TERMUX_PKG_SHA256=f601c5e937d5e0ac5adfc8cf87692f56d3f08c2baa502d6fafd52e666d6cadde
 TERMUX_PKG_GIT_BRANCH=master
-TERMUX_PKG_DEPENDS="dbus, gdk-pixbuf, glib, libcairo, liblua54, libx11, libxcb, libxdg-basedir, libxkbcommon, lua-lgi, pango, startup-notification, xcb-util, xcb-util-cursor, xcb-util-keysyms, xcb-util-wm, xcb-util-xrm"
+TERMUX_PKG_DEPENDS="dbus, gdk-pixbuf, glib, libcairo, lua54, libx11, libxcb, libxdg-basedir, libxkbcommon, lua-lgi, pango, startup-notification, xcb-util, xcb-util-cursor, xcb-util-keysyms, xcb-util-wm, xcb-util-xrm"
+TERMUX_PKG_BUILD_DEPENDS="imagemagick"
+TERMUX_PKG_BREAKS="awesome-luajit"
+TERMUX_PKG_CONFLICTS="awesome-luajit"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DLUA_MATH_LIBRARY=
 -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+-DLUA_INCLUDE_DIR=$TERMUX_PREFIX/include/lua5.4
+-DLUA_LIBRARY=$TERMUX_PREFIX/lib/liblua5.4.so
 "
 TERMUX_PKG_HOSTBUILD=true
 
@@ -30,10 +35,15 @@ termux_step_post_get_source() {
 	if [[ "${s}" != "${TERMUX_PKG_SHA256}  "* ]]; then
 		termux_error_exit "Checksum mismatch for source files."
 	fi
+
+	find "$TERMUX_PKG_SRCDIR" -type f -print0 | \
+		xargs -0 sed -i \
+		-e "s|/usr/bin/env lua|/usr/bin/env lua5.4|g" \
+		-e "s|/usr/bin/lua|/usr/bin/lua5.4|g"
 }
 
 _load_ubuntu_packages() {
-	local hostbuild_lua_version="$(echo 'print(_VERSION)' | lua - | cut -d' ' -f2)"
+	local hostbuild_lua_version="5.4"
 	export HOSTBUILD_ROOTFS="${TERMUX_PKG_HOSTBUILD_DIR}/ubuntu_packages"
 	export LD_LIBRARY_PATH="${HOSTBUILD_ROOTFS}/usr/lib/x86_64-linux-gnu"
 	LD_LIBRARY_PATH+=":${HOSTBUILD_ROOTFS}/usr/lib"
@@ -49,71 +59,72 @@ termux_step_host_build() {
 		return
 	fi
 
-	local hostbuild_lua_version="$(echo 'print(_VERSION)' | lua - | cut -d' ' -f2)"
-	local ubuntu_packages
+	local hostbuild_lua_version="5.4"
 
-	ubuntu_packages+="lua-lgi,"
-	ubuntu_packages+="lua-any,"
-	ubuntu_packages+="lua-expat,"
-	ubuntu_packages+="lua-filesystem,"
-	ubuntu_packages+="lua-ldoc,"
-	ubuntu_packages+="lua-penlight,"
-	ubuntu_packages+="imagemagick,"
-	ubuntu_packages+="imagemagick-6-common,"
-	ubuntu_packages+="imagemagick-6.q16,"
-	ubuntu_packages+="libaom3 libde265-0,"
-	ubuntu_packages+="libdjvulibre-text,"
-	ubuntu_packages+="libdjvulibre21,"
-	ubuntu_packages+="libfftw3-double3,"
-	ubuntu_packages+="libheif-plugin-aomdec,"
-	ubuntu_packages+="libheif-plugin-aomenc,"
-	ubuntu_packages+="libheif-plugin-libde265,"
-	ubuntu_packages+="libheif1,"
-	ubuntu_packages+="libjxr-tools,"
-	ubuntu_packages+="libjxr0t64,"
-	ubuntu_packages+="liblqr-1-0,"
-	ubuntu_packages+="libmagickcore-6.q16-7-extra,"
-	ubuntu_packages+="libmagickcore-6.q16-7t64,"
-	ubuntu_packages+="libmagickwand-6.q16-7t64,"
-	ubuntu_packages+="libwmflite-0.2-7,"
-	ubuntu_packages+="liblua$hostbuild_lua_version-0,"
-	ubuntu_packages+="liblua$hostbuild_lua_version-dev,"
-	ubuntu_packages+="libstartup-notification0,"
-	ubuntu_packages+="libstartup-notification0-dev,"
-	ubuntu_packages+="libx11-xcb-dev,"
-	ubuntu_packages+="libxcb-cursor-dev,"
-	ubuntu_packages+="libxcb-cursor0,"
-	ubuntu_packages+="libxcb-icccm4,"
-	ubuntu_packages+="libxcb-icccm4-dev,"
-	ubuntu_packages+="libxcb-image0,"
-	ubuntu_packages+="libxcb-image0-dev,"
-	ubuntu_packages+="libxcb-keysyms1,"
-	ubuntu_packages+="libxcb-keysyms1-dev,"
-	ubuntu_packages+="libxcb-randr0-dev,"
-	ubuntu_packages+="libxcb-render-util0,"
-	ubuntu_packages+="libxcb-render-util0-dev,"
-	ubuntu_packages+="libxcb-shape0,"
-	ubuntu_packages+="libxcb-shape0-dev,"
-	ubuntu_packages+="libxcb-util-dev,"
-	ubuntu_packages+="libxcb-util0-dev,"
-	ubuntu_packages+="libxcb-util1,"
-	ubuntu_packages+="libxcb-xinerama0,"
-	ubuntu_packages+="libxcb-xinerama0-dev,"
-	ubuntu_packages+="libxcb-xkb-dev,"
-	ubuntu_packages+="libxcb-xkb1,"
-	ubuntu_packages+="libxcb-xrm-dev,"
-	ubuntu_packages+="libxcb-xrm0,"
-	ubuntu_packages+="libxcb-xtest0,"
-	ubuntu_packages+="libxcb-xtest0-dev,"
-	ubuntu_packages+="libxdg-basedir-dev,"
-	ubuntu_packages+="libxdg-basedir1,"
-	ubuntu_packages+="libxkbcommon-x11-0,"
-	ubuntu_packages+="libxkbcommon-x11-dev,"
-	ubuntu_packages+="libxcb-shape0,"
-	ubuntu_packages+="libxcb-shape0-dev,"
-	ubuntu_packages+="libxcb-xfixes0-dev,"
+	local -a ubuntu_packages=(
+		"imagemagick"
+		"imagemagick-6-common"
+		"imagemagick-6.q16"
+		"libaom3"
+		"libde265-0"
+		"libdjvulibre-text"
+		"libdjvulibre21"
+		"libfftw3-double3"
+		"libheif-plugin-aomdec"
+		"libheif-plugin-aomenc"
+		"libheif-plugin-libde265"
+		"libheif1"
+		"libjxr-tools"
+		"libjxr0t64"
+		"liblqr-1-0"
+		"liblua$hostbuild_lua_version-0"
+		"liblua$hostbuild_lua_version-dev"
+		"libmagickcore-6.q16-7-extra"
+		"libmagickcore-6.q16-7t64"
+		"libmagickwand-6.q16-7t64"
+		"libstartup-notification0"
+		"libstartup-notification0-dev"
+		"libwmflite-0.2-7"
+		"libx11-xcb-dev"
+		"libxcb-cursor-dev"
+		"libxcb-cursor0"
+		"libxcb-icccm4"
+		"libxcb-icccm4-dev"
+		"libxcb-image0"
+		"libxcb-image0-dev"
+		"libxcb-keysyms1"
+		"libxcb-keysyms1-dev"
+		"libxcb-randr0-dev"
+		"libxcb-render-util0"
+		"libxcb-render-util0-dev"
+		"libxcb-shape0"
+		"libxcb-shape0"
+		"libxcb-shape0-dev"
+		"libxcb-shape0-dev"
+		"libxcb-util-dev"
+		"libxcb-util0-dev"
+		"libxcb-util1"
+		"libxcb-xfixes0-dev"
+		"libxcb-xinerama0"
+		"libxcb-xinerama0-dev"
+		"libxcb-xkb-dev"
+		"libxcb-xkb1"
+		"libxcb-xrm-dev"
+		"libxcb-xrm0"
+		"libxcb-xtest0"
+		"libxcb-xtest0-dev"
+		"libxdg-basedir-dev"
+		"libxdg-basedir1"
+		"libxkbcommon-x11-0"
+		"libxkbcommon-x11-dev"
+		"lua-any"
+		"lua-expat"
+		"lua-filesystem"
+		"lua-ldoc"
+		"lua-penlight"
+	)
 
-	termux_download_ubuntu_packages "$ubuntu_packages"
+	termux_download_ubuntu_packages "${ubuntu_packages[@]}"
 
 	local HOSTBUILD_ROOTFS="${TERMUX_PKG_HOSTBUILD_DIR}/ubuntu_packages"
 
@@ -122,23 +133,43 @@ termux_step_host_build() {
 	find "${HOSTBUILD_ROOTFS}/usr/lib/x86_64-linux-gnu" -xtype l \
 		-exec sh -c "ln -snvf /usr/lib/x86_64-linux-gnu/\$(readlink \$1) \$1" sh {} \;
 	ln -sf convert-im6.q16 "${HOSTBUILD_ROOTFS}/usr/bin/convert"
+	ln -sf $(command -v "lua$hostbuild_lua_version") "${HOSTBUILD_ROOTFS}/usr/bin/lua-any"
 
 	_load_ubuntu_packages
 
 	termux_setup_cmake
 	termux_setup_ninja
+	# XXX: termux_setup_meson is not expected to be called in host build
+	AR=;CC=;CFLAGS=;CPPFLAGS=;CXX=;CXXFLAGS=;LD=;LDFLAGS=;PKG_CONFIG=;STRIP=
+	termux_setup_meson
+	unset AR CC CFLAGS CPPFLAGS CXX CXXFLAGS LD LDFLAGS PKG_CONFIG STRIP
 
 	export PKG_CONFIG_PATH="${HOSTBUILD_ROOTFS}/usr/lib/x86_64-linux-gnu/pkgconfig"
 	export CFLAGS="-I${HOSTBUILD_ROOTFS}/usr/include/x86_64-linux-gnu"
 	CFLAGS+=" -I/usr/include/xcb"
+
+	LUA_LGI="$TERMUX_PKG_HOSTBUILD_DIR/lua-lgi"
+	(. "$TERMUX_SCRIPTDIR/packages/lua-lgi/build.sh"; TERMUX_PKG_SRCDIR="$LUA_LGI" termux_step_get_source)
+	$TERMUX_MESON setup \
+		"$LUA_LGI" \
+		"$LUA_LGI/build" \
+		--prefix "$HOSTBUILD_ROOTFS/usr" \
+		-Dlua-pc=lua"${hostbuild_lua_version//./}" \
+		-Dlua-bin=lua"${hostbuild_lua_version}"
+	$TERMUX_MESON compile -C "$LUA_LGI/build"
+	$TERMUX_MESON install -C "$LUA_LGI/build"
+
 	cmake \
 		-G Ninja \
-		-S ${TERMUX_PKG_SRCDIR} \
+		-S "${TERMUX_PKG_SRCDIR}" \
 		-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
 		-DCMAKE_PREFIX_PATH="${HOSTBUILD_ROOTFS}/usr" \
-		-DCMAKE_INSTALL_PREFIX="${HOSTBUILD_ROOTFS}/usr"
+		-DCMAKE_INSTALL_PREFIX="${HOSTBUILD_ROOTFS}/usr" \
+		-DLUA_INCLUDE_DIR="${HOSTBUILD_ROOTFS}/usr/include/lua$hostbuild_lua_version" \
+		-DLUA_LIBRARY="/usr/lib/x86_64-linux-gnu/liblua$hostbuild_lua_version.so.0" \
+		-DLUA_EXECUTABLE=$(command -v "lua$hostbuild_lua_version")
 	ninja \
-		-j ${TERMUX_PKG_MAKE_PROCESSES} \
+		-j "${TERMUX_PKG_MAKE_PROCESSES}" \
 		install
 	unset PKG_CONFIG_PATH CFLAGS
 }
@@ -148,4 +179,6 @@ termux_step_pre_configure() {
 		_load_ubuntu_packages
 		export PATH="$TERMUX_PKG_HOSTBUILD_DIR:$PATH"
 	fi
+
+	TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" -DLUA_EXECUTABLE=$(command -v lua5.4)"
 }
