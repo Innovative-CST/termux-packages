@@ -27,7 +27,17 @@ on:
         options:
           - Innovative-CST/blockidle-default-deb
           - Innovative-CST/blockidle-build-tools-deb
-
+      arch:
+        description: "Target architecture to build"
+        required: true
+        type: choice
+        default: all
+        options:
+          - all
+          - aarch64
+          - arm
+          - i686
+          - x86_64
 permissions: {} # none
 
 concurrency:
@@ -43,7 +53,7 @@ jobs:
     runs-on: ubuntu-24.04
     strategy:
       matrix:
-        target_arch: [aarch64, arm, i686, x86_64]
+        target_arch: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.arch != 'all' && fromJSON(format('["{0}"]', github.event.inputs.arch)) || fromJSON('["aarch64","arm","i686","x86_64"]') }}
       fail-fast: false
     steps:
     - name: Clone repository
