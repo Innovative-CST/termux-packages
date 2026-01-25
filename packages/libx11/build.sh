@@ -15,6 +15,7 @@ TERMUX_PKG_RECOMMENDS="xorg-xauth"
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 ac_cv_path_RAWCPP=/usr/bin/cpp
 --enable-malloc0returnsnull
+--disable-static
 "
 
 termux_step_post_massage() {
