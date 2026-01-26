@@ -76,6 +76,7 @@ termux_step_post_make_install() {
 	{
 		echo "# The main BlockIDLE repository"
 		echo "deb https://innovative-cst.github.io/blockidle-default-mirror/ stable main"
+		echo "deb https://innovative-cst.github.io/blockidle-build-tools-mirror/ stable main"
 	} > $TERMUX_PREFIX/etc/apt/sources.list
 
 	# apt-transport-tor
