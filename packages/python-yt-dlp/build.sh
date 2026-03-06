@@ -1,11 +1,10 @@
 TERMUX_PKG_HOMEPAGE=https://github.com/yt-dlp/yt-dlp
 TERMUX_PKG_DESCRIPTION="A youtube-dl fork with additional features and fixes"
 TERMUX_PKG_LICENSE="Unlicense"
-TERMUX_PKG_MAINTAINER="Joshua Kahn @TomJo2000"
-TERMUX_PKG_VERSION="2025.12.08"
-TERMUX_PKG_REVISION=2
+TERMUX_PKG_MAINTAINER="Joshua Kahn <tom@termux.dev>"
+TERMUX_PKG_VERSION="2026.03.03"
 TERMUX_PKG_SRCURL=https://github.com/yt-dlp/yt-dlp/archive/refs/tags/$TERMUX_PKG_VERSION.tar.gz
-TERMUX_PKG_SHA256=10bec5b2bfb367263e7e46ddb69187204506f9d67b7f01bb499d07fa0d54d4b7
+TERMUX_PKG_SHA256=e7d718b4f2de8ca31660ae65a49792a572292dde3ddddc0ef5362c8377e2c80c
 TERMUX_PKG_DEPENDS="libc++, libexpat, openssl, python, python-brotli, python-pip, python-pycryptodomex"
 TERMUX_PKG_RECOMMENDS="ffmpeg, yt-dlp-ejs"
 TERMUX_PKG_PYTHON_COMMON_BUILD_DEPS="hatchling, wheel"

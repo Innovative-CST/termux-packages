@@ -2,10 +2,10 @@ TERMUX_PKG_HOMEPAGE=https://github.com/yt-dlp/ejs
 TERMUX_PKG_DESCRIPTION="External JavaScript for yt-dlp supporting many runtimes"
 TERMUX_PKG_LICENSE="Unlicense"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="0.3.2"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_VERSION="0.5.0"
+TERMUX_PKG_REVISION=2
 TERMUX_PKG_SRCURL="https://github.com/yt-dlp/ejs/releases/download/$TERMUX_PKG_VERSION/yt_dlp_ejs-$TERMUX_PKG_VERSION.tar.gz"
-TERMUX_PKG_SHA256=31a41292799992bdc913e03c9fac2a8c90c82a5cbbc792b2e3373b01da841e3e
+TERMUX_PKG_SHA256=8dfae59e418232f485253dcf8e197fefa232423c3af7824fe19e4517b173293b
 TERMUX_PKG_PYTHON_COMMON_BUILD_DEPS="build, hatchling, hatch-vcs"
 TERMUX_PKG_PLATFORM_INDEPENDENT=true
 TERMUX_PKG_BUILD_IN_SRC=true
@@ -17,7 +17,8 @@ fi
 
 termux_step_make() {
 	termux_setup_nodejs
-	npm install
+	npm install --frozen-lockfile
+	npm run bundle
 	python -m build --wheel --no-isolation
 }
 

@@ -2,15 +2,15 @@ TERMUX_PKG_HOMEPAGE=https://oplist.org/
 TERMUX_PKG_DESCRIPTION="A file list program that supports multiple storage"
 TERMUX_PKG_LICENSE="AGPL-V3"
 TERMUX_PKG_MAINTAINER="2096779623 <admin@utermux.dev>"
-TERMUX_PKG_VERSION="4.1.9"
-_OPENLIST_WEB_VERSION="4.1.9"
+TERMUX_PKG_VERSION="4.1.10"
+_OPENLIST_WEB_VERSION="4.1.10"
 TERMUX_PKG_SRCURL=(
 	https://github.com/OpenListTeam/OpenList/archive/refs/tags/v${TERMUX_PKG_VERSION}.tar.gz
 	https://github.com/OpenListTeam/OpenList-Frontend/releases/download/v${_OPENLIST_WEB_VERSION}/openlist-frontend-dist-v${_OPENLIST_WEB_VERSION}.tar.gz
 )
 TERMUX_PKG_SHA256=(
-	5171cef3b03f6b68af0e4886af7b6f5a6f9c103de41c3b831f46dcb3ddcc6f18
-	03e9c57d614ee338441d38fa27af1435f34b2c508ce57e0bd75b91b24d934aec
+	0e85b2e9f97c819a79a054c2de1f505b0b0d78e1c8ce6783e12da85ea519840c
+	7df4b3a94eb054963e5eb4addab8d74bdf027c4c02f9a83845ceb7a9eccbc674
 )
 TERMUX_PKG_AUTO_UPDATE=true
 TERMUX_PKG_BUILD_IN_SRC=true
@@ -22,6 +22,7 @@ TERMUX_PKG_UPDATE_TAG_TYPE="latest-release-tag"
 termux_pkg_auto_update() {
 	local latest_tag
 	latest_tag="$(termux_github_api_get_tag "${TERMUX_PKG_SRCURL[0]}" "${TERMUX_PKG_UPDATE_TAG_TYPE}")"
+	latest_tag="${latest_tag#v}"
 	(( ${#latest_tag} )) || {
 		printf '%s\n' \
 		'WARN: Auto update failure!' \
@@ -44,7 +45,8 @@ termux_pkg_auto_update() {
 	curl -sLo "${tmpdir}/openlist-linux-amd64.tar.gz" "https://github.com/OpenListTeam/OpenList/releases/download/v${latest_tag}/openlist-linux-amd64.tar.gz"
 	tar -C "${tmpdir}" -xf "${tmpdir}/openlist-linux-amd64.tar.gz"
 	chmod +x "${tmpdir}/openlist"
-	local latest_web_version="$("${tmpdir}"/openlist version | grep "WebVersion:" | cut -d ' ' -f 2 | sed 's/^v//')"
+	local latest_web_version
+	latest_web_version="$("${tmpdir}"/openlist version | grep "WebVersion:" | cut -d ' ' -f 2 | sed 's/^v//')"
 
 	curl -sLo "${tmpdir}/src" "https://github.com/OpenListTeam/OpenList/archive/refs/tags/v${latest_tag}.tar.gz"
 	curl -sLo "${tmpdir}/web" "https://github.com/OpenListTeam/OpenList-Frontend/releases/download/v${latest_web_version}/openlist-frontend-dist-v${latest_web_version}.tar.gz"

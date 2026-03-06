@@ -2,20 +2,20 @@ TERMUX_PKG_HOMEPAGE=https://fishshell.com/
 TERMUX_PKG_DESCRIPTION="The user-friendly command line shell"
 TERMUX_PKG_LICENSE="GPL-2.0"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="4.3.3"
+TERMUX_PKG_VERSION="4.5.0"
 TERMUX_PKG_SRCURL=https://github.com/fish-shell/fish-shell/releases/download/$TERMUX_PKG_VERSION/fish-${TERMUX_PKG_VERSION}.tar.xz
-TERMUX_PKG_SHA256=eba0e7d325c1d46046bb9d29434e7e0dabf7f584eb156845005d688e10b86e57
-TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_SHA256=89151f8cf14b634e080226fe696f9ce7d4d153c77629996ca4431c80482c64ed
 # fish calls 'tput' from ncurses-utils, at least when cancelling (Ctrl+C) a command line.
 # man is needed since fish calls apropos during command completion.
-TERMUX_PKG_DEPENDS="bc, libandroid-support, libc++, ncurses, ncurses-utils, mandoc, pcre2"
+TERMUX_PKG_DEPENDS="bc, libandroid-support, libc++, mandoc, ncurses, ncurses-utils, pcre2"
 TERMUX_PKG_BUILD_IN_SRC=true
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 -DWITH_DOCS=OFF
 -DFISH_USE_SYSTEM_PCRE2=ON
 -DMAC_CODESIGN_ID=OFF
--DWITH_GETTEXT=OFF
+-DWITH_MESSAGE_LOCALIZATION=OFF
 "
+TERMUX_PKG_AUTO_UPDATE=true
 
 termux_step_pre_configure() {
 	termux_setup_cmake

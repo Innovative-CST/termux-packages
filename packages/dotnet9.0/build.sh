@@ -2,9 +2,8 @@ TERMUX_PKG_HOMEPAGE=https://dotnet.microsoft.com/en-us/
 TERMUX_PKG_DESCRIPTION=".NET 9.0"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@truboxl"
-TERMUX_PKG_VERSION="9.0.11"
-TERMUX_PKG_REVISION=1
-_DOTNET_SDK_VERSION="9.0.112"
+TERMUX_PKG_VERSION="9.0.12"
+_DOTNET_SDK_VERSION="9.0.113"
 TERMUX_PKG_SRCURL=git+https://github.com/dotnet/dotnet
 TERMUX_PKG_GIT_BRANCH="v${_DOTNET_SDK_VERSION}"
 TERMUX_PKG_BUILD_DEPENDS="krb5, libicu, openssl, zlib"
@@ -20,15 +19,22 @@ TERMUX_PKG_EXCLUDED_ARCHES="arm"
 
 termux_pkg_auto_update() {
 	local api_url="https://api.github.com/repos/dotnet/core/git/refs/tags"
-	local latest_refs_tags=$(curl -s "${api_url}" | jq .[].ref | sed -ne "s|.*v\(9.0.*\)\"|\1|p")
+	local latest_refs_tags
+	latest_refs_tags="$(curl -s "${api_url}" | jq .[].ref | sed -ne "s|.*v\(9.0.*\)\"|\1|p")"
 	if [[ -z "${latest_refs_tags}" ]]; then
 		echo "WARN: Unable to get latest refs tags from upstream. Try again later." >&2
 		return
 	fi
 
-	local latest_version=$(echo "${latest_refs_tags}" | sort -V | tail -n1)
+	local latest_version
+	latest_version=$(echo "${latest_refs_tags}" | sort -V | tail -n1)
 	if [[ "${latest_version}" == "${TERMUX_PKG_VERSION}" ]]; then
 		echo "INFO: No update needed. Already at version '${TERMUX_PKG_VERSION}'."
+		return
+	fi
+
+	if [[ "${BUILD_PACKAGES}" == "false" ]]; then
+		echo "INFO: package needs to be updated to ${latest_version}."
 		return
 	fi
 
@@ -39,7 +45,6 @@ termux_pkg_auto_update() {
 
 	termux_pkg_upgrade_version "${latest_version}"
 }
-
 
 termux_step_post_get_source() {
 	# set up dotnet cli and override source files
@@ -169,7 +174,7 @@ termux_step_configure() {
 termux_step_make() {
 	export CROSSCOMPILE=1
 	# --online needed to workaround restore issue
-	time ./build.sh \
+	if ! time ./build.sh \
 		--clean-while-building \
 		--use-mono-runtime \
 		--online \
@@ -178,8 +183,12 @@ termux_step_make() {
 		-- \
 		/p:Configuration=${CONFIG} \
 		/p:TargetArchitecture=${arch} \
-		/p:TargetRid=linux-bionic-${arch}
-
+		/p:TargetRid=linux-bionic-${arch}; then
+		echo "ERROR: Build failed" >&2
+		termux_dotnet_kill
+		termux_step_post_make_install
+		termux_error_exit
+	fi
 	"${TERMUX_PKG_BUILDDIR}/.dotnet/dotnet" build-server shutdown
 }
 
@@ -361,8 +370,13 @@ termux_step_post_make_install() {
 
 termux_step_post_massage() {
 	local _microsoft_netcore_app_dir="${TERMUX_PREFIX}/lib/dotnet/shared/Microsoft.NETCore.App"
+	local _files_to_check="
+	libSystem.Net.Security.Native.so
+	libSystem.Security.Cryptography.Native.OpenSsl.so
+	libcoreclr.so
+	"
 	local _rpath_check_file
-	for _rpath_check_file in libSystem.Security.Cryptography.Native.OpenSsl.so libcoreclr.so libSystem.Net.Security.Native.so; do
+	for _rpath_check_file in ${_files_to_check}; do
 		if [[ ! -f "${_microsoft_netcore_app_dir}/${TERMUX_PKG_VERSION}/${_rpath_check_file}" ]]; then
 			echo "ERROR: ${_microsoft_netcore_app_dir}/${TERMUX_PKG_VERSION}/${_rpath_check_file} does not exist!"
 			echo "ERROR: Finding '${_rpath_check_file}' in '${_microsoft_netcore_app_dir}':"

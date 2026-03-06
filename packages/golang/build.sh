@@ -2,9 +2,10 @@ TERMUX_PKG_HOMEPAGE=https://go.dev/
 TERMUX_PKG_DESCRIPTION="Go programming language compiler"
 TERMUX_PKG_LICENSE="BSD 3-Clause"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="3:1.25.6"
+TERMUX_PKG_VERSION="3:1.26.0"
+TERMUX_PKG_REVISION=1
 TERMUX_PKG_SRCURL=https://go.dev/dl/go${TERMUX_PKG_VERSION#*:}.src.tar.gz
-TERMUX_PKG_SHA256=58cbf771e44d76de6f56d19e33b77d745a1e489340922875e46585b975c2b059
+TERMUX_PKG_SHA256=c9132a8a1f6bd2aa4aad1d74b8231d95274950483a4950657ee6c56e6e817790
 TERMUX_PKG_DEPENDS="clang"
 TERMUX_PKG_ANTI_BUILD_DEPENDS="clang"
 TERMUX_PKG_RECOMMENDS="resolv-conf"
@@ -14,6 +15,7 @@ TERMUX_PKG_NO_STATICSPLIT=true
 termux_step_post_get_source() {
 	. "$TERMUX_PKG_BUILDER_DIR/patch-script/fix-hardcoded-etc-resolv-conf.sh"
 	. "$TERMUX_PKG_BUILDER_DIR/patch-script/remove-pidfd.sh"
+	. "$TERMUX_PKG_BUILDER_DIR/patch-script/remove-futex_time64.sh"
 }
 
 termux_step_make_install() {

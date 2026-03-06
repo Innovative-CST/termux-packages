@@ -2,10 +2,12 @@ TERMUX_PKG_HOMEPAGE=https://go.mau.fi/gomuks
 TERMUX_PKG_DESCRIPTION="A terminal Matrix client written in Go"
 TERMUX_PKG_LICENSE="AGPL-V3"
 TERMUX_PKG_MAINTAINER="@termux"
-TERMUX_PKG_VERSION="25.11"
-TERMUX_PKG_SRCURL=https://github.com/gomuks/gomuks/archive/refs/tags/v0.${TERMUX_PKG_VERSION/.}.0.tar.gz
-TERMUX_PKG_SHA256=b581393db960fd91d22942317af11e869821a14fca716e446cf2b9eaacfccf7e
+TERMUX_PKG_VERSION="26.02"
+TERMUX_PKG_SRCURL="https://github.com/gomuks/gomuks/archive/refs/tags/v0.${TERMUX_PKG_VERSION/.}.0.tar.gz"
+TERMUX_PKG_SHA256=a3a4771b7455fce2dbdf42058a8a429de73474b6f30b93e3e714f2eb2808e458
 TERMUX_PKG_AUTO_UPDATE=true
+TERMUX_PKG_UPDATE_VERSION_REGEXP="0\.\K\d+(?=\.0)"
+TERMUX_PKG_UPDATE_VERSION_SED_REGEXP="s/([0-9][0-9])([0-9][0-9])/\1.\2/"
 TERMUX_PKG_DEPENDS="libolm, resolv-conf"
 TERMUX_PKG_BUILD_IN_SRC=true
 # i686 fails to compile:
@@ -14,11 +16,24 @@ TERMUX_PKG_BUILD_IN_SRC=true
 # ./libde265-all.inl:10:10: fatal error: 'alloc_pool.cc' file not found
 TERMUX_PKG_EXCLUDED_ARCHES="i686"
 
+termux_step_post_get_source() {
+	termux_setup_golang
+	export GOPATH="$TERMUX_PKG_SRCDIR/go"
+	go get ./cmd/gomuks
+	chmod +w "$GOPATH" -R
+
+	local d
+	for d in go/pkg/mod/go.mau.fi/goheif*; do
+		patch -p1 -d "${d}" < "$TERMUX_PKG_BUILDER_DIR/goheif-no-pthread_getaffinity_np.diff"
+	done
+}
+
 termux_step_pre_configure() {
 	termux_setup_golang
 }
 
 termux_step_make() {
+	export GOPATH="$TERMUX_PKG_SRCDIR/go"
 	local ldflags tag_commit
 	# This is adapted directly from the upstream `./build-noweb.sh`
 	# https://github.com/gomuks/gomuks/blob/v0.2511.0/build-noweb.sh

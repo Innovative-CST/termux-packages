@@ -2,9 +2,10 @@ TERMUX_PKG_HOMEPAGE=https://www.chromium.org/Home
 TERMUX_PKG_DESCRIPTION="Chromium web browser (Host tools)"
 TERMUX_PKG_LICENSE="BSD 3-Clause"
 TERMUX_PKG_MAINTAINER="@licy183"
-TERMUX_PKG_VERSION="144.0.7559.96"
-TERMUX_PKG_SRCURL=https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$TERMUX_PKG_VERSION-lite.tar.xz
-TERMUX_PKG_SHA256=6f7fbeaa5ef0b1b4c0ede631edb7365ae48602f587c3c3b65af874922d21a064
+_CHROMIUM_VERSION=144.0.7559.132
+TERMUX_PKG_VERSION="145.0.7632.75+really$_CHROMIUM_VERSION"
+TERMUX_PKG_SRCURL=https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$_CHROMIUM_VERSION-lite.tar.xz
+TERMUX_PKG_SHA256=41cc60391836575f4a40ffd576f647c0b9105219acb494e739c9ea2c66f5ddb9
 TERMUX_PKG_DEPENDS="atk, cups, dbus, fontconfig, gtk3, krb5, libc++, libevdev, libxkbcommon, libminizip, libnss, libx11, mesa, openssl, pango, pulseaudio, zlib"
 TERMUX_PKG_BUILD_DEPENDS="libffi-static"
 # TODO: Split chromium-common and chromium-headless
@@ -14,8 +15,8 @@ TERMUX_PKG_BUILD_DEPENDS="libffi-static"
 TERMUX_PKG_EXCLUDED_ARCHES="i686"
 TERMUX_PKG_NO_STRIP=true
 TERMUX_PKG_NO_ELF_CLEANER=true
+TERMUX_PKG_AUTO_UPDATE=false
 TERMUX_PKG_ON_DEVICE_BUILD_NOT_SUPPORTED=true
-TERMUX_PKG_AUTO_UPDATE=true
 
 SYSTEM_LIBRARIES="    fontconfig"
 # TERMUX_PKG_DEPENDS="fontconfig"
@@ -24,7 +25,7 @@ termux_pkg_auto_update() {
 	local latest_version="$(curl -s 'https://chromiumdash.appspot.com/fetch_releases?channel=Stable&platform=Linux&num=10&offset=0' | jq -rc '.[].version' | sort -t. -k 1,1n -k 2,2n -k 3,3n -k 4,4n | tail -n 1)"
 
 	if ! termux_pkg_is_update_needed \
-		"${TERMUX_PKG_VERSION#*:}" "${latest_version}"; then
+		"${_CHROMIUM_VERSION#*:}" "${latest_version}"; then
 		echo "INFO: No update needed. Already at version '${latest_version}'."
 		return 0
 	fi
@@ -78,7 +79,7 @@ termux_step_post_get_source() {
 		$SYSTEM_LIBRARIES
 
 	# Remove the source file to keep more space
-	rm -f "$TERMUX_PKG_CACHEDIR/chromium-$TERMUX_PKG_VERSION-lite.tar.xz"
+	rm -f "$TERMUX_PKG_CACHEDIR/chromium-$_CHROMIUM_VERSION-lite.tar.xz"
 }
 
 termux_step_configure() {

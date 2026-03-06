@@ -4,7 +4,7 @@ TERMUX_PKG_LICENSE="GPL-2.0-or-later" # with OpenSSL linking exceptions
 TERMUX_PKG_LICENSE_FILE="LICENSE"     # specified for additional nuance.
 TERMUX_PKG_MAINTAINER="@termux"
 TERMUX_PKG_VERSION="5.14"
-TERMUX_PKG_REVISION=1
+TERMUX_PKG_REVISION=2
 TERMUX_PKG_SRCURL="https://github.com/Gnucash/gnucash/releases/download/${TERMUX_PKG_VERSION}/gnucash-${TERMUX_PKG_VERSION}.tar.bz2"
 TERMUX_PKG_SHA256=0c6fd20214da86a9a0443359f7b62d9a2bd4ed802fd680853da4b757a371ac91
 TERMUX_PKG_DEPENDS="boost, gettext, guile, glib, gtk3, libicu, libsecret, libxml2, libxslt, perl, python, swig, webkit2gtk-4.1, xsltproc, zlib"
@@ -20,6 +20,7 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 termux_step_pre_configure() {
 	termux_setup_gir
 	termux_setup_glib_cross_pkg_config_wrapper
+	termux_setup_python_pip
 
 	# gnc-autoclear.c:151:22: error: format string is not a string literal (potentially insecure)
 	CFLAGS+=" -Wno-format-security"

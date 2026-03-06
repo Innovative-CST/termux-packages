@@ -2,9 +2,10 @@ TERMUX_PKG_HOMEPAGE=https://www.chromium.org/Home
 TERMUX_PKG_DESCRIPTION="Chromium web browser"
 TERMUX_PKG_LICENSE="BSD 3-Clause"
 TERMUX_PKG_MAINTAINER="@licy183"
-TERMUX_PKG_VERSION="143.0.7499.192"
-TERMUX_PKG_SRCURL=https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$TERMUX_PKG_VERSION-lite.tar.xz
-TERMUX_PKG_SHA256=01b2db3c4b89b96b3b18e889b7ef583ca243dd90d27f46c3c0115d298618501c
+_CHROMIUM_VERSION=144.0.7559.132
+TERMUX_PKG_VERSION="145.0.7632.75+really$_CHROMIUM_VERSION"
+TERMUX_PKG_SRCURL=https://commondatastorage.googleapis.com/chromium-browser-official/chromium-$_CHROMIUM_VERSION-lite.tar.xz
+TERMUX_PKG_SHA256=41cc60391836575f4a40ffd576f647c0b9105219acb494e739c9ea2c66f5ddb9
 TERMUX_PKG_DEPENDS="atk, cups, dbus, fontconfig, gtk3, krb5, libc++, libevdev, libxkbcommon, libminizip, libnss, libx11, mesa, openssl, pango, pulseaudio, zlib"
 TERMUX_PKG_BUILD_DEPENDS="chromium-host-tools, libffi-static"
 # TODO: Split chromium-common and chromium-headless
@@ -12,17 +13,17 @@ TERMUX_PKG_BUILD_DEPENDS="chromium-host-tools, libffi-static"
 # TERMUX_PKG_SUGGESTS="chromium-headless, chromium-driver"
 # Chromium doesn't support i686 on Linux.
 TERMUX_PKG_EXCLUDED_ARCHES="i686"
-TERMUX_PKG_ON_DEVICE_BUILD_NOT_SUPPORTED=true
 TERMUX_PKG_AUTO_UPDATE=false
+TERMUX_PKG_ON_DEVICE_BUILD_NOT_SUPPORTED=true
 
 SYSTEM_LIBRARIES="    fontconfig"
 # TERMUX_PKG_DEPENDS="fontconfig"
 
 termux_pkg_auto_update() {
-	local latest_version="$(. $TERMUX_SCRIPTDIR/x11-packages/chromium-host-tools/build.sh; echo ${TERMUX_PKG_VERSION})"
+	local latest_version="$(. $TERMUX_SCRIPTDIR/x11-packages/chromium-host-tools/build.sh; echo ${_CHROMIUM_VERSION})"
 
 	if ! termux_pkg_is_update_needed \
-		"${TERMUX_PKG_VERSION#*:}" "${latest_version}"; then
+		"${_CHROMIUM_VERSION#*:}" "${latest_version}"; then
 		echo "INFO: No update needed. Already at version '${latest_version}'."
 		return 0
 	fi
@@ -58,8 +59,8 @@ termux_pkg_auto_update() {
 
 termux_step_post_get_source() {
 	# Version guard
-	local version_tools=$(. $TERMUX_SCRIPTDIR/x11-packages/chromium-host-tools/build.sh; echo ${TERMUX_PKG_VERSION})
-	if [ "${version_tools}" != "${TERMUX_PKG_VERSION}" ]; then
+	local version_tools=$(. $TERMUX_SCRIPTDIR/x11-packages/chromium-host-tools/build.sh; echo ${_CHROMIUM_VERSION})
+	if [ "${version_tools}" != "${_CHROMIUM_VERSION}" ]; then
 		termux_error_exit "Version mismatch between chromium-host-tools and chromium."
 	fi
 
@@ -82,7 +83,7 @@ termux_step_post_get_source() {
 		$SYSTEM_LIBRARIES
 
 	# Remove the source file to keep more space
-	rm -f "$TERMUX_PKG_CACHEDIR/chromium-$TERMUX_PKG_VERSION-lite.tar.xz"
+	rm -f "$TERMUX_PKG_CACHEDIR/chromium-$_CHROMIUM_VERSION-lite.tar.xz"
 }
 
 termux_step_pre_configure() {

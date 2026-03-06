@@ -2,8 +2,8 @@ TERMUX_PKG_HOMEPAGE=https://dotnet.microsoft.com/en-us/
 TERMUX_PKG_DESCRIPTION=".NET 8.0"
 TERMUX_PKG_LICENSE="MIT"
 TERMUX_PKG_MAINTAINER="@truboxl"
-TERMUX_PKG_VERSION="8.0.23"
-_DOTNET_SDK_VERSION="8.0.123"
+TERMUX_PKG_VERSION="8.0.24"
+_DOTNET_SDK_VERSION="8.0.124"
 TERMUX_PKG_SRCURL=git+https://github.com/dotnet/dotnet
 TERMUX_PKG_GIT_BRANCH="v${_DOTNET_SDK_VERSION}"
 TERMUX_PKG_BUILD_DEPENDS="krb5, libicu, openssl, zlib"
@@ -18,15 +18,22 @@ TERMUX_PKG_EXCLUDED_ARCHES="arm"
 
 termux_pkg_auto_update() {
 	local api_url="https://api.github.com/repos/dotnet/core/git/refs/tags"
-	local latest_refs_tags=$(curl -s "${api_url}" | jq .[].ref | sed -ne "s|.*v\(8.0.*\)\"|\1|p")
+	local latest_refs_tags
+	latest_refs_tags=$(curl -s "${api_url}" | jq .[].ref | sed -ne "s|.*v\(8.0.*\)\"|\1|p")
 	if [[ -z "${latest_refs_tags}" ]]; then
 		echo "WARN: Unable to get latest refs tags from upstream. Try again later." >&2
 		return
 	fi
 
-	local latest_version=$(echo "${latest_refs_tags}" | sort -V | tail -n1)
+	local latest_version
+	latest_version=$(echo "${latest_refs_tags}" | sort -V | tail -n1)
 	if [[ "${latest_version}" == "${TERMUX_PKG_VERSION}" ]]; then
 		echo "INFO: No update needed. Already at version '${TERMUX_PKG_VERSION}'."
+		return
+	fi
+
+	if [[ "${BUILD_PACKAGES}" == "false" ]]; then
+		echo "INFO: package needs to be updated to ${latest_version}."
 		return
 	fi
 
