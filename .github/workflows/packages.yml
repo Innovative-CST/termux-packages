@@ -27,7 +27,10 @@ on:
       repository:
         description: 'Target repository to push deb files'
         required: true
-        default: 'Innovative-CST/terminal-default-debs'
+        type: choice
+        options:
+          - Innovative-CST/terminal-default-deb
+          - Innovative-CST/blockidle-build-tools-deb
       arch:
         description: "Target architecture to build"
         required: true
