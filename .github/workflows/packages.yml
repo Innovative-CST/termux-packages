@@ -390,6 +390,7 @@ jobs:
         cd debfiles
         git config --global user.name "DevVigilante"
         git config --global user.email "96680248+DevVigilante@users.noreply.github.com"
+        git lfs untrack "*.deb"
         git add .
         git commit -m "upload deb files for ${{ github.event.inputs.packages}}"
         git push origin main -f
