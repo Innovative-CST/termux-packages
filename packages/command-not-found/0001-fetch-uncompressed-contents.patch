@@ -1,0 +1,43 @@
+diff --git a/generate-db.js b/generate-db.js
+--- a/generate-db.js
++++ b/generate-db.js
+@@ -1,10 +1,6 @@
+ #!/usr/bin/env node
+ import { glob, readFile, writeFile } from "node:fs/promises";
+-import { gunzip } from "node:zlib";
+ import { join } from "node:path";
+-import { promisify } from "node:util";
+-
+-const gunzipAsync = promisify(gunzip);
+ 
+ const { TERMUX_SCRIPTDIR, TERMUX_PREFIX, TERMUX_ARCH } = process.env;
+ 
+@@ -136,23 +132,16 @@ async function parseAlternativeFile(filePath) {
+ }
+ 
+ async function processRepo(repo, repoPath, arch) {
+-  // Fetch the Contents.gz file for the given architecture from the apt mirror
+-  const url = `${repo.url}/dists/${repo.distribution}/Contents-${arch}.gz`;
+-  const response = await fetch(url);
++  // Fetch uncompressed Contents file
++  const url =
++    `${repo.url}/dists/${repo.distribution}/${repo.component}/Contents-${arch}`;
+ 
++  const response = await fetch(url);
+   if (!response.ok) {
+     throw new Error(`${url} returned ${response.status}`);
+   }
+ 
+-  // Since we are using a gzip file, we need to decompress it
+-  const data = await gunzipAsync(await response.arrayBuffer());
+-  // Convert to string and split by new lines
+-  // Each line is of the format:
+-  // "path/to/file package"
+-  //
+-  // Where `path/to/file` is the path to the file in the package, and `package`
+-  // is the name of the package that provides this file.
+-  const lines = data.toString().split("\n");
++  const lines = (await response.text()).split("\n");
+ 
+   // Stores mappings of binary names to package names
+   // The key is the binary name, and the value is an array of package names
