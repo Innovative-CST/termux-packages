@@ -8,11 +8,4 @@
     "component": "main",
     "url": "https://innovative-cst.github.io/terminal-default-mirror"
   }
-  // "build_tools": {
-  //   "name": "terminal-build-tools",
-  //   "directories": ["packages"],
-  //   "distribution": "stable",
-  //   "component": "main",
-  //   "url": "https://innovative-cst.github.io/terminal-build-tools-mirror"
-  // }
 }
