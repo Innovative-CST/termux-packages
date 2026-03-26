@@ -29,8 +29,8 @@ on:
         required: true
         type: choice
         options:
-          - Innovative-CST/terminal-default-deb
-          - Innovative-CST/terminal-build-tools-deb
+          - Innovative-cst-debug/terminal-default-deb
+          - Innovative-cst-debug/terminal-build-tools-deb
       arch:
         description: "Target architecture to build"
         required: true
