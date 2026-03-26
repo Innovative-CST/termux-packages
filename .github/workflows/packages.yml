@@ -30,7 +30,7 @@ on:
         type: choice
         options:
           - Innovative-CST/terminal-default-deb
-          - Innovative-CST/blockidle-build-tools-deb
+          - Innovative-CST/terminal-build-tools-deb
       arch:
         description: "Target architecture to build"
         required: true
