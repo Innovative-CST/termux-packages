@@ -8,9 +8,6 @@ on:
     branches: [ "master", "android-5" ]
   pull_request:
     branches: [ "master", "android-5" ]
-  schedule:
-    # 9:44pm, every Sunday.
-    - cron: '44 21 * * 0'
 
 jobs:
   analyze:
