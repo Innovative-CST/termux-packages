@@ -31,6 +31,8 @@ on:
         options:
           - Innovative-cst-debug/terminal-default-deb
           - Innovative-cst-debug/terminal-build-tools-deb
+          - Innovative-cst-debug/terminal-python-deb
+          - Innovative-cst-debug/terminal-nodejs-deb
       arch:
         description: "Target architecture to build"
         required: true
